@@ -29,6 +29,15 @@ takes place and gradually downloads the original image. Once the
 original image is downloaded, the blurred thumbnail is replaced through
 a nice-looking-CSS-fade effect. That’s all!
 
+
+Installation
+------------
+
+Install it using pip:
+
+``pip install django-progressiveimagefield``
+
+
 How to use
 ----------
 
