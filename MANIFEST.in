@@ -1,0 +1,6 @@
+include README.rst
+include LICENSE
+recursive-include progressiveimagefield/static *.css
+recursive-include progressiveimagefield/static *.js
+recursive-include progressiveimagefield/templates *.html
+recursive-exclude tests *
