@@ -37,6 +37,9 @@ Install it using pip:
 
 ``pip install django-progressiveimagefield``
 
+Add following line to settings.py
+``INSTALLED_APPS += ['progressiveimagefield']``
+
 
 How to use
 ----------
