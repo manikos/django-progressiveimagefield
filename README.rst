@@ -39,7 +39,7 @@ Installation
 
 2. Add it to your ``INSTALLED_APPS`` inside your ``settings`` file:
   
-  ``INSTALLED_APPS += ['progressiveimagefield']``
+   ``INSTALLED_APPS += ['progressiveimagefield']``
 
 
 How to use
