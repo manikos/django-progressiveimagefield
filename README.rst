@@ -33,9 +33,13 @@ a nice-looking-CSS-fade effect. That’s all!
 Installation
 ------------
 
-Install it using pip:
+1. Install it using pip:
 
-``pip install django-progressiveimagefield``
+   ``pip install django-progressiveimagefield``
+
+2. Add it to your ``INSTALLED_APPS`` inside your ``settings`` file:
+  
+  ``INSTALLED_APPS += ['progressiveimagefield']``
 
 
 How to use
