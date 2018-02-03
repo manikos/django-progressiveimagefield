@@ -20,6 +20,7 @@ def _calc_aspect_ratio(image):
         ar_percent = round(ar_percent, 2)
     return ar_percent
 
+
 def _get_thumbnail_url(image):
     """ Given a large image, return the thumbnail url """
     lhs, rhs = splitext(image.url)
@@ -27,13 +28,21 @@ def _get_thumbnail_url(image):
     thumb_url = f'{lhs}{rhs}'
     return thumb_url
 
-@register.inclusion_tag('render_field.html')
-def render_progressive_field(image):
+
+def render_progressive_field(image, alt_text=''):
     # `image` is an instance of ProgressiveImageField (which is an ImageField)
     ar_percent = _calc_aspect_ratio(image)
     thumb_url = _get_thumbnail_url(image)
     return {
         'image': image,
         'thumb_url': thumb_url,
+        'alt': alt_text,
         'ar_percent': ar_percent,
     }
+
+
+# register func "manually" for re-usability by Jinja.
+register.inclusion_tag(
+    'render_field.html',
+    func=render_progressive_field
+)(render_progressive_field)

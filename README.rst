@@ -75,16 +75,58 @@ Inside your ``base.html`` template:
         </body>
     </html>
 
-Finally, inside another template where you want to render your image
-progressively:
+Finally, inside another HTML template where you want to render your image
+progressively, you have two options depending on which template engine is used to render your template:
 
-.. code:: html
+- Using the DTL (Django Template Language)
 
-    {% load progressive_tags %}
+    .. code:: html
 
-    {% block content %}
-        {% render_progressive_field instance.img %}
-    {% endblock %}
+        {% load progressive_tags %}
+
+        {% block content %}
+            {% render_progressive_field instance.img %}
+        {% endblock %}
+
+- Using the `Jinja2 Template Language <http://jinja.pocoo.org/>`__
+
+ 1. Add the filter inside the file (i.e ``jinja.py``) where Jinja2 Environment is defined
+
+    .. code:: python
+
+        from jinja2 import Environment
+
+        def environment(**options):
+            env = Environment(**options)
+            env.filters.update({
+                'progressive': 'progressiveimagefield.jinja.progressive',
+            })
+            return env
+
+ 2. Add the dotted path to the above function in your ``settings``'s ``TEMPLATES`` setting ``OPTIONS`` dict as the value to the ``environment`` key. OK, here is the code:
+
+    .. code:: python
+
+        TEMPLATES = [
+            {
+                'BACKEND': 'django.template.backends.jinja2.Jinja2',
+                'DIRS': # setting for DIRS here,
+                'APP_DIRS': True,
+                'OPTIONS': {
+                    'environment': 'path.to.jinja.environment.function',
+                },
+            },
+            ...
+        ]
+
+ 3. Use it in your HTML template like this (just like a regular Django filter):
+
+    .. code:: html
+
+        {% block content %}
+            {{ instance.img|progressive }}
+        {% endblock %}
+
 
 Testing
 -------

@@ -22,8 +22,21 @@ MIDDLEWARE = [
 
 TEMPLATES = [
     {
+        'BACKEND': 'django.template.backends.jinja2.Jinja2',
+        # set APP_DIRS to False because by default Jinja looks up to a
+        # directory named "jinja2" under any app, but we have named it
+        # already, as "templates". Thus, we declare it explicit inside the
+        # DIRS setting below.
+        'APP_DIRS': False,
+        'DIRS': [
+            os.path.join(BASE_DIR, 'progressiveimagefield/templates/')
+        ],
+        'OPTIONS': {
+            'environment': 'tests.jinja_env.environment',
+        },
+    },
+    {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

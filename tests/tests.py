@@ -1,14 +1,18 @@
 import os
+import re
 from pathlib import Path
 from PIL import Image
 
 from django.core.files import File
 from django.test.testcases import TestCase
 
-from .test_settings import BASE_DIR, MEDIA_URL, MEDIA_ROOT
+from jinja2 import Markup
+
+from .test_settings import MEDIA_URL, MEDIA_ROOT
 from .models import TestModel
+from progressiveimagefield.jinja.filters import progressive
 from progressiveimagefield.templatetags.progressive_tags import (
-    _calc_aspect_ratio, _get_thumbnail_url
+    _calc_aspect_ratio, _get_thumbnail_url, render_progressive_field
 )
 
 REL_PATH_FILENAME = 'tests/local_test_images'
@@ -17,6 +21,7 @@ REL_PATH_FILENAME = 'tests/local_test_images'
 def empty_image_dir():
     for image in os.scandir(MEDIA_ROOT):
         os.remove(image)
+
 
 def create_model_instance(name, img_name):
     image_file = File(
@@ -108,3 +113,48 @@ class TemplateTagsTestCase(TestCase):
             _get_thumbnail_url(self.square.img),
             f'{MEDIA_URL}500x500_thumb.png'
         )
+
+    def test_render_progressive_field_empty_alt(self):
+        context = render_progressive_field(self.portrait.img)
+        correct_context = {
+            'image': self.portrait.img,
+            'thumb_url': '/media/100x500_thumb.jpg',
+            'alt': '',
+            'ar_percent': 500,
+        }
+        self.assertEqual(context, correct_context)
+
+    def test_render_progressive_field_non_empty_alt(self):
+        context = render_progressive_field(self.portrait.img, 'alt_text')
+        correct_context = {
+            'image': self.portrait.img,
+            'thumb_url': '/media/100x500_thumb.jpg',
+            'alt': 'alt_text',
+            'ar_percent': 500,
+        }
+        self.assertEqual(context, correct_context)
+
+
+class Jinja2TestCase(TestCase):
+    def setUp(self):
+        self.portrait = create_model_instance(
+            name='portrait',
+            img_name='100x500.jpg'
+        )
+
+    def tearDown(self):
+        empty_image_dir()
+
+    def test_progressive(self):
+        context = render_progressive_field(self.portrait.img, 'alt_text')
+        rendered_html_text = progressive(self.portrait.img, context['alt'])
+        correct_text = Markup(
+            f'<div class="placeholder" data-large="{context["image"].url}">'
+            f'<img class="img-small" src="{context["thumb_url"]}" '
+            f'alt="{context["alt"]}">'
+            f'<div style="padding-bottom:{context["ar_percent"]}%;"></div>'
+            f'</div>'
+        )
+        texts = [re.sub(r'[\n\t]*', '', t)
+                 for t in [rendered_html_text, correct_text]]
+        self.assertEqual(texts[0], texts[1])
