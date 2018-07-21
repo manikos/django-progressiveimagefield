@@ -12,7 +12,8 @@ class ProgressiveImageField(ImageField):
 
     def pre_save(self, model_instance, add):
         image = super().pre_save(model_instance, add)
-        self.generate_thumb(image)
+        if image:
+            self.generate_thumb(image)
         return image
 
     def in_memory(self, image):
