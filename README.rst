@@ -5,7 +5,7 @@ Requires:
 
 -  Python 3.6+
 -  Pillow 4.0+
--  Django 1.10+
+-  Django 2.0+
 
 *The Problem*: So, you have build a website (portfolio, news, eshop
 etc), you have optimized your static files (css, js, fonts, images) but
@@ -38,7 +38,7 @@ Installation
    ``pip install django-progressiveimagefield``
 
 2. Add it to your ``INSTALLED_APPS`` inside your ``settings`` file:
-  
+
    ``INSTALLED_APPS += ['progressiveimagefield']``
 
 
