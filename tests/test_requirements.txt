@@ -1,4 +1,4 @@
-Django==2.2.20
+Django==2.2.21
 django-progressiveimagefield==0.1.5
 Jinja2==2.11.3
 olefile==0.44
